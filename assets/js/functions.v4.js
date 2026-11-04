@@ -56,8 +56,9 @@
     button.addEventListener('click', () => {
       const filter = button.dataset.filter || 'all';
 
-      filterButtons.forEach((item) => item.classList.remove('is-active'));
+      filterButtons.forEach((item) => { item.classList.remove('is-active'); item.setAttribute('aria-pressed', 'false'); });
       button.classList.add('is-active');
+      button.setAttribute('aria-pressed', 'true');
 
       appCards.forEach((card) => {
         const categories = card.dataset.category || '';
@@ -89,7 +90,7 @@
 
     if (!thumb) return;
     if (!videoId) {
-      if (fallback) fallback.textContent = 'Add YouTube ID';
+      window.NRSI18n?.refreshVideos();
       return;
     }
 
@@ -97,12 +98,12 @@
     const imageUrl = `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`;
 
     thumb.href = youtubeUrl;
-    thumb.setAttribute('aria-label', `Watch ${card.querySelector('h3')?.textContent || 'video'} on YouTube`);
+    
     thumb.style.backgroundImage = `linear-gradient(180deg, rgba(7, 10, 18, 0.02), rgba(7, 10, 18, 0.48)), url('${imageUrl}')`;
     thumb.classList.add('has-thumbnail');
 
     if (fallback) {
-      fallback.textContent = 'Watch on YouTube';
+      window.NRSI18n?.refreshVideos();
     }
   });
 
@@ -117,7 +118,7 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' });
 
-    revealItems.forEach((item) => observer.observe(item));
+    revealItems.forEach((item) => { item.classList.add('will-reveal'); observer.observe(item); });
   } else {
     revealItems.forEach((item) => item.classList.add('is-visible'));
   }
